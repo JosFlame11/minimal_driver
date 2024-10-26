@@ -1,0 +1,9 @@
+<library path="minimal_driver">
+  <class name="minimal_driver/DiffDriveSystemHardware"
+         type="minimal_driver::DiffDriveSystemHardware"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      This controller is meant to be used for a Two Wheel Differential Robot
+    </description>
+  </class>
+</library>

@@ -1,0 +1,24 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/josflame11/robot_ws/install/minimal_driver/include/**",
+        "/home/josflame11/robot_ws/install/diff_driver_controller/include/**",
+        "/opt/ros/humble/include/**",
+        "/home/josflame11/robot_ws/src/minimal_driver/include/**",
+        "/home/josflame11/robot_ws/src/robot_model/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
