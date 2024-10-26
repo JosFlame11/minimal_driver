@@ -3,7 +3,7 @@
 
 
     <!-- Robot description -->
-    <xacro:include filename="$(find robot_model)/urdf/robot_core.xacro"/>
+    <xacro:include filename="$(find minimal_driver)/urdf/robot_core.xacro"/>
     <!-- Ros2 controller -->
     <xacro:include filename="$(find minimal_driver)/urdf/diffbot.ros2_control.xacro"/>
     
