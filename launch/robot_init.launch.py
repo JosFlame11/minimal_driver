@@ -1,8 +1,13 @@
+
+import os
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.event_handlers import OnProcessExit
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
+
+from ament_index_python.packages import get_package_share_directory
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
@@ -12,6 +17,12 @@ def generate_launch_description():
 
     package_name = "minimal_driver"
 
+
+    camera = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([os.path.join(
+                    get_package_share_directory(package_name),'launch','camera_init.launch.py'
+                )])
+    )
     # Get URDF via xacro
     robot_description_content = Command(
         [
@@ -71,6 +82,7 @@ def generate_launch_description():
     )
 
     nodes = [
+        camera,
         control_node,
         robot_state_pub_node,
         robot_controller_spawner,
