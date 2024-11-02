@@ -81,12 +81,19 @@ def generate_launch_description():
         )
     )
 
+    delay_camera_after_joint_state = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_state_broadcaster_spawner,
+            on_exit=[camera],
+        )
+    )
+
     nodes = [
-        camera,
         control_node,
         robot_state_pub_node,
         robot_controller_spawner,
         delay_joint_state_broadcaster_after_robot_controller_spawner,
+        delay_camera_after_joint_state
     ]
 
     return LaunchDescription(nodes)
