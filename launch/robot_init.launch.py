@@ -19,9 +19,14 @@ def generate_launch_description():
 
 
     camera = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([os.path.join(
-                    get_package_share_directory(package_name),'launch','camera_init.launch.py'
-                )])
+        PythonLaunchDescriptionSource([os.path.join(
+            get_package_share_directory(package_name),'launch','camera_init.launch.py'
+        )])
+    )
+    micro_ros = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([os.path.join(
+            get_package_share_directory(package_name),'launch','micro_ros_init.launch.py'
+        )])
     )
     # Get URDF via xacro
     robot_description_content = Command(
@@ -87,13 +92,20 @@ def generate_launch_description():
             on_exit=[camera],
         )
     )
+    delay_micro_after_joint_state = RegisterEventHandler(
+        event_handler=OnProcessExit(
+            target_action=joint_state_broadcaster_spawner,
+            on_exit=micro_ros
+        )
+    )
 
     nodes = [
         control_node,
         robot_state_pub_node,
         robot_controller_spawner,
         delay_joint_state_broadcaster_after_robot_controller_spawner,
-        delay_camera_after_joint_state
+        delay_camera_after_joint_state,
+        delay_micro_after_joint_state
     ]
 
     return LaunchDescription(nodes)

@@ -36,7 +36,6 @@ def generate_launch_description():
                     'frame_rate': LaunchConfiguration('frame_rate'),
                     'pixel_format': 'YUYV'  # Modify as per your camera's format
                 }
-            ],
-            output='screen'
+            ]
         )
     ])
