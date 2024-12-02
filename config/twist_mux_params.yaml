@@ -9,3 +9,11 @@ twist_mux:
         topic: /cmd_vel/sensors
         timeout: 0.5
         priority: 20
+      artificial_vision:
+        topic: /cmd_vel/vision
+        timeout: 0.3
+        priority: 30
+      gotoGoal:
+        topic: /cmd_vel/go2goal
+        timeout: 0.5
+        priority: 5

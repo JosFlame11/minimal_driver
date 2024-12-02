@@ -116,9 +116,9 @@ def generate_launch_description():
 
     nodes = [
         twist_mux,
-        control_node,
         robot_state_pub_node,
         robot_controller_spawner,
+        delayed_controller_manager,
         delay_joint_state_broadcaster_after_robot_controller_spawner
     ]
 

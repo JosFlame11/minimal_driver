@@ -1,6 +1,6 @@
 import os
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
 from launch_ros.actions import Node
 from launch_ros.substitutions import FindPackageShare
 from ament_index_python.packages import get_package_share_directory
@@ -29,11 +29,15 @@ def generate_launch_description():
             get_package_share_directory(package_name),'launch','robot_behavior_init.launch.py'
         )])
     )
+    delayed_robot_node = TimerAction(
+        period=5.0,
+        actions=[robot]
+    )
 
     nodes = [
         camera,
         micro_ros,
-        robot,
-        robot_behavior
+        robot_behavior,
+        delayed_robot_node
     ]
     return LaunchDescription(nodes)
