@@ -38,6 +38,6 @@ def generate_launch_description():
         camera,
         micro_ros,
         robot_behavior,
-        delayed_robot_node
+        # delayed_robot_node
     ]
     return LaunchDescription(nodes)
