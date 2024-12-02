@@ -11,11 +11,11 @@ def generate_launch_description():
             description='Video device to use for the camera'
         ),
         DeclareLaunchArgument(
-            'image_width', default_value='320',
+            'image_width', default_value='640',
             description='Width of the camera image'
         ),
         DeclareLaunchArgument(
-            'image_height', default_value='240',
+            'image_height', default_value='640',
             description='Height of the camera image'
         ),
         DeclareLaunchArgument(

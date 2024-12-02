@@ -1,0 +1,11 @@
+twist_mux:
+  ros__parameters:
+    topics:
+      path_follower:
+        topic: /cmd_vel/follower
+        timeout: 0.5
+        priority: 10
+      sensor_avoidance:
+        topic: /cmd_vel/sensors
+        timeout: 0.5
+        priority: 20

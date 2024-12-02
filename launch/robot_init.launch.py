@@ -1,9 +1,8 @@
 
 import os
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, RegisterEventHandler, IncludeLaunchDescription
-from launch.conditions import IfCondition
-from launch.event_handlers import OnProcessExit
+from launch.actions import DeclareLaunchArgument, RegisterEventHandler, IncludeLaunchDescription, TimerAction
+from launch.event_handlers import OnProcessExit, OnExecutionComplete
 from launch.substitutions import Command, FindExecutable, PathJoinSubstitution, LaunchConfiguration
 
 from ament_index_python.packages import get_package_share_directory
@@ -18,16 +17,16 @@ def generate_launch_description():
     package_name = "minimal_driver"
 
 
-    camera = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory(package_name),'launch','camera_init.launch.py'
-        )])
-    )
-    micro_ros = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([os.path.join(
-            get_package_share_directory(package_name),'launch','micro_ros_init.launch.py'
-        )])
-    )
+    # camera = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource([os.path.join(
+    #         get_package_share_directory(package_name),'launch','camera_init.launch.py'
+    #     )])
+    # )
+    # micro_ros = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource([os.path.join(
+    #         get_package_share_directory(package_name),'launch','micro_ros_init.launch.py'
+    #     )])
+    # )
     # Get URDF via xacro
     robot_description_content = Command(
         [
@@ -48,6 +47,20 @@ def generate_launch_description():
         ]
     )
 
+    twist_mux_params = PathJoinSubstitution(
+        [
+            FindPackageShare(package_name),
+            "config",
+            "twist_mux_params.yaml",
+        ]
+    )
+    twist_mux = Node(
+        package="twist_mux",
+        executable="twist_mux",
+        parameters=[twist_mux_params],
+        remappings=[('/cmd_vel_out','/cmd_vel')]
+    )
+
     control_node = Node(
         package="controller_manager",
         executable="ros2_control_node",
@@ -58,6 +71,8 @@ def generate_launch_description():
             ("/minimal_controller/cmd_vel_unstamped", "/cmd_vel")
         ],
     )
+    delayed_controller_manager = TimerAction(period=3.0, actions=[control_node])
+
     robot_state_pub_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
@@ -86,26 +101,25 @@ def generate_launch_description():
         )
     )
 
-    delay_camera_after_joint_state = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
-            on_exit=[camera],
-        )
-    )
-    delay_micro_after_joint_state = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=joint_state_broadcaster_spawner,
-            on_exit=micro_ros
-        )
-    )
+    # delay_camera_after_joint_state = RegisterEventHandler(
+    #     event_handler=OnProcessExit(
+    #         target_action=joint_state_broadcaster_spawner,
+    #         on_exit=[camera],
+    #     )
+    # )
+    # delay_micro_after_joint_state = RegisterEventHandler(
+    #     event_handler=OnProcessExit(
+    #         target_action=joint_state_broadcaster_spawner,
+    #         on_exit=micro_ros
+    #     )
+    # )
 
     nodes = [
+        twist_mux,
         control_node,
         robot_state_pub_node,
         robot_controller_spawner,
-        delay_joint_state_broadcaster_after_robot_controller_spawner,
-        delay_camera_after_joint_state,
-        delay_micro_after_joint_state
+        delay_joint_state_broadcaster_after_robot_controller_spawner
     ]
 
     return LaunchDescription(nodes)
